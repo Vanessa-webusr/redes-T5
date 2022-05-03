@@ -1,11 +1,9 @@
 # pylint: disable=all
 from iputils import *
 import struct
-import logging
 import os
 
-LOGLEVEL = os.environ.get('LOGLEVEL', 'WARNING').upper()
-logging.basicConfig(level=LOGLEVEL)
+LOGLEVEL = os.environ.get('LOGLEVEL', 'NONE').upper()
 
 class IP:
     def __init__(self, enlace):
@@ -22,9 +20,12 @@ class IP:
         self.counter = 0
 
     def __raw_recv(self, datagrama):
-        logging.warning('ip.py [IP.__raw_recv] datagrama', datagrama)
+        if LOGLEVEL != 'NONE': print('ip.py [IP.__raw_recv] datagrama', datagrama)
+
         dscp, ecn, identification, flags, frag_offset, ttl, proto, \
            src_addr, dst_addr, payload = read_ipv4_header(datagrama)
+        if LOGLEVEL != 'NONE': print('ip.py [IP.__raw_recv] payload', payload)
+
         ttl_ = ttl - 1
         if ttl_ == 0:
             datagramaICMP = self.createICMP(datagrama)

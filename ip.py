@@ -63,7 +63,7 @@ class IP:
 
         byte1 = struct.pack("!B", dscp & ecn)
 
-        totalLength = len(payload)
+        totalLength = len(payload) + 20
         byte2and3 = struct.pack("!H", totalLength)
 
         byte4and5 = struct.pack("!H", identification)
@@ -83,10 +83,10 @@ class IP:
         destIpAddr, = struct.unpack('!I', str2addr(dst_addr))
         byte16to19 = struct.pack("!I", destIpAddr)
 
-        datagrama = byte0 + byte1 + byte2and3 + byte4and5 + byte6and7 + byte8 + byte9 + byte10and11 + byte12to15 + byte16to19
+        datagrama = byte0 + byte1 + byte2and3 + byte4and5 + byte6and7 + byte8 + byte9 + byte10and11 + byte12to15 + byte16to19 + payload
         headerChecksum = calc_checksum(datagrama)
         byte10and11 = struct.pack("!H", headerChecksum)
-        datagrama = byte0 + byte1 + byte2and3 + byte4and5 + byte6and7 + byte8 + byte9 + byte10and11 + byte12to15 + byte16to19
+        datagrama = byte0 + byte1 + byte2and3 + byte4and5 + byte6and7 + byte8 + byte9 + byte10and11 + byte12to15 + byte16to19 + payload
         return datagrama
 
     def _next_hop(self, dest_addr):
